@@ -1,0 +1,98 @@
+---
+title: "PCA_RMarkDown"
+author: "Dennis Robert"
+date: "December 1, 2015"
+output: html_document
+---
+
+##PRINCIPAL COMPONENT ANALYSIS##
+The goal is to compare the PCA functions in R with their respective outputs and also with the SAS PRINCOMP procedure. R has two functions built-in its base package for doing PCA - prcomp and princomp. There is also other custom functions from other packages. One of the most popular among them is the PCA function from FactoMineR pacakge.
+
+###1. PRCOMP ###
+```{r}
+data(iris)  #loading the IRIS dataset. contains 150 observations of 5 variables
+head(iris)  #Column 1, 2, 3 and 4 are the variables required for PCA
+
+#applying PCA using prcomp
+iris.pca <- prcomp(iris[,1:4], center = T, scale.= T) #perfomrs PCA. Data is centered and scaled
+plot(iris.pca, type="l", col="blue", lwd=2, main="Scree Plot") #screeplot
+```
+The above screeplot shows that the first two principal components carry about 95% of the variance of the data.
+```{r}
+
+names(iris.pca) #displays the lists in the object iris.pca
+iris.pca$sdev #standard deviations of principal components
+iris.pca$rotation #the matrix of variable loadings. The columns contain eigenvectors
+
+eig <- iris.pca$sdev^2 #eigenvalues of the principal components
+variance <- eig*100/sum(eig) #variance explained by each of PCs
+cumvar <- cumsum(variance) #cumulative variance
+
+iris.scaled <- scale(iris[,1:4], center = TRUE, scale = TRUE) #centering and scaling the raw data
+newData1 <- as.data.frame(t(t(iris.pca$rotation)%*%t(iris.scaled))) #new data after PCA
+
+#creating a dataframe with eigenvalues, variance and cumulative variance of PCA
+iris.eig <- data.frame(eig = eig, variance = variance,cumvariance = cumvar)
+
+#some plots
+par(mar = c(6,4,4,2)+0.1)
+barplot(iris.eig[,2],names.arg=1:nrow(iris.eig), main="Variances", 
+        xlab="Principal Components",ylab="Percentage of Variances", col="steelblue",
+        space=0.5)
+barplot(iris.eig[,3],names.arg=1:nrow(iris.eig), main="Cumulative Variances", 
+        xlab="Principal Components",ylab="Percentage of Cumulative Variances", 
+        col="steelblue", space = 0.5)
+library(corrplot) #library for visualising correlation matrix
+corrplot(cor(iris[,1:4]), method="color") #correlation matrix of raw data
+corrplot(cor(newData1), method="color") #correlation matrix of the data after PCA
+```
+Correlation plots depict that the correlations between transformed variables after PCA are very minimal as opposed to the original variables.
+
+###2. PRINCOMP ###
+```{r}
+iris.princomp <- princomp(iris[,1:4], cor=T)
+names(iris.princomp) #displays the list in the object iris.princomp
+iris.princomp$sdev #standard deviations of PCs
+iris.princomp$loadings
+newData2 <- as.data.frame(iris.princomp$scores, 
+                          colnames(c("PC1","PC2","PC3","PC4"))) #new data after PCA
+```
+
+###3. PCA from the FactoMineR library
+```{r}
+library(FactoMineR)
+iris.MineR <- PCA(iris[,1:4], scale.unit = T, graph=F)
+names(iris.MineR)
+iris.MineR$eig #eigenvalues, variances and cumulative variances
+dat <- as.data.frame(iris.MineR$ind)
+newData3 <- dat[,1:4] #new data after PCA
+```
+
+###Summary of the transformed data from PRCOMP###
+```{r}
+summary(newData1) #from prcomp
+```
+###Summary of the transformed data from PRINCOMP###
+```{r}
+summary(newData2) #from princomp
+```
+###Summary of the transformed data from PCA###
+```{r}
+summary(newData3) #from PCA
+```
+
+###COMPARING SAS PRINCOMP AND CORRESPONDING R FUNCTIONS (PRCOMP and PRINCOMP)###
+```{r}
+library("haven") #for reading SAS data file into R
+crime <- read_sas("C:/Acads/Datasets/crime.sas7bdat") #reading SAS data into R
+summary(crime)
+crime.pca <- prcomp(crime[,2:8], center = T, scale. = T)
+crime.princomp <- princomp(crime[,2:8], cor = T)
+crime.pca$rotation #the principal components from prcomp
+crime.princomp$loadings 
+```
+
+Below is the SAS PRINCOMP output of Principal Components
+![SAS PRINCOMP PCs](http://s7.postimg.org/c2ng5km4b/SASPRINCOMP.jpg)
+
+The principal components from princomp the above PCs looks identical to the output from SAS PROCS PRINCOMP. [Please click here to refer the SAS documentation of SAS PROCS PRINCOMP v9.2](https://support.sas.com/documentation/cdl/en/statugprincomp/61821/PDF/default/statugprincomp.pdf)

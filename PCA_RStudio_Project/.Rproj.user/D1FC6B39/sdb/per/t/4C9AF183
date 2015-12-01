@@ -1,0 +1,17 @@
+{
+    "contents" : "#k means clustering\n\ndata(iris)\nresult1 <- kmeans(iris[,1:4], 3, iter.max = 100, nstart = 100)\nresult1\ntable(iris$Species, result1$cluster)\nplot(iris[,1], iris[,2], col = result1$cluster)\n\n#hierarchial clustering\ndata <- read.csv(\"europe.csv\", header=T, sep=\",\")\neuroclust<-hclust(dist(data[-1]))\nplot(euroclust, labels=data$Country)\nrect.hclust(euroclust, 5)\ngroups.5 = cutree(euroclust,5)\n#partitioning around medoids\nlibrary(cluster)\neurope.pam <- pam(dist(data[-1]), 5)\ntable(groups.5,europe.pam$clustering)\n\n####CLUSTERING. FASTCLUS SAS AND K-MEANS###\n\nresult1 <- kmeans(fish3[,c(3,10,6,7,8)],7)\nfish3$Height <- fish3$HtPct*fish3$Length3/(fish3$Weight3*100)\nfish3$Width <- fish3$WidthPct*fish3$Length3/(fish3$Weight3*100)\nfish3$scaledLength1 <- fish3$Length1/fish3$Weight3\n\nresult2 <- kmeans(fish3[,c(13,10,11,12,8)],7)\n\n",
+    "created" : 1447921859301.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3642120474",
+    "id" : "4C9AF183",
+    "lastKnownWriteTime" : 1447746112,
+    "path" : "C:/Acads/R Codes/Clustering_Testing.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

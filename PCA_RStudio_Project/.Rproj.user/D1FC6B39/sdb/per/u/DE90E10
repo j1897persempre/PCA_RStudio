@@ -1,0 +1,18 @@
+{
+    "contents" : "#k means clustering\n\ndata(iris)\nresult1 <- kmeans(iris[,1:4], 3, iter.max = 100, nstart = 100)\nresult1\ntable(iris$Species, result1$cluster)\nplot(iris[,1], iris[,2], col = result1$cluster)\n\n\n\n\n\n\n\n\n####CLUSTERING. FASTCLUS SAS AND K-MEANS###\n\nresult1 <- kmeans(fish3[,c(3,10,6,7,8)],7)\nfish3$Height <- fish3$HtPct*fish3$Length3/(fish3$Weight3*100)\nfish3$Width <- fish3$WidthPct*fish3$Length3/(fish3$Weight3*100)\nfish3$scaledLength1 <- fish3$Length1/fish3$Weight3\n\nresult2 <- kmeans(fish3[,c(13,10,11,12,8)],7)\n\n",
+    "created" : 1447921871484.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "855179253",
+    "id" : "DE90E10",
+    "lastKnownWriteTime" : 31244220638101619,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
