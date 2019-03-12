@@ -4,6 +4,8 @@
 
 
 ###############PRCOMP###############################
+
+print(3+5)
 data(iris)  #loading the IRIS dataset. contains 150 observations of 5 variables
 head(iris)  #Column 1, 2, 3 and 4 are the variables required for PCA
 
